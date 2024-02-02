@@ -89,8 +89,6 @@ class StartPage(customtkinter.CTkFrame):
         self.about_btn = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280, text="About", image=about_img, compound=LEFT , anchor="w", command=lambda: controller.show_frame(AboutPage))
         self.about_btn.grid(row=8, column=0, pady=(10, 20))
 
-    
-
         # MAIN CONTENT
         self.main_content = customtkinter.CTkFrame(self, corner_radius=10)
         self.main_content.grid(row=0, column=1, padx=(10, 10), pady=(10, 10), rowspan=3 , sticky="nsew")
@@ -132,7 +130,6 @@ class LandingPage(customtkinter.CTkFrame):
         # TODO must get to a data to database
         self.my_frame = PreviousChats(master=self.sidebar_frame, width=300, fg_color="#F8F8F8")
         self.my_frame.grid(row=1, column=0, sticky="nsew")
-      
 
         self.new_chat = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280 , text="Start a new chat",text_color="white", fg_color="#004CC6", image=add_img, compound=LEFT)
         self.new_chat.grid(row=4, column=0, pady=10)
@@ -145,11 +142,6 @@ class LandingPage(customtkinter.CTkFrame):
 
         self.about_btn = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280, text="About", image=about_img, compound=LEFT , anchor="w", command=lambda: controller.show_frame(AboutPage))
         self.about_btn.grid(row=8, column=0, pady=(10, 20))
-
-        # self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["80%", "90%", "100%", "110%", "120%"],
-        #                                                        command=self.change_scaling_event)
-        # self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
-
 
         # MAIN CONTENT
         self.main_content = customtkinter.CTkFrame(self, corner_radius=10)
@@ -193,6 +185,7 @@ class AboutPage(customtkinter.CTkFrame):
         self.main_content.grid(row=0, column=0, padx=(10, 10), pady=(10, 10), rowspan=11 , sticky="nsew")
         self.main_content.grid_columnconfigure(list(range(13)), weight=1)
         self.main_content.grid_rowconfigure(list(range(13)), weight=1)
+
         # for x in range(12):
         #     self.main_header = customtkinter.CTkLabel(self.main_content, text="Fake News", justify=LEFT, fg_color="#ff0000")
         #     self.main_header.grid(row=4, column=x)
@@ -242,7 +235,7 @@ class App(customtkinter.CTk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-
+        #List all Frame class to interchange the display/design
         for F in (LandingPage,StartPage, AboutPage):
 
             frame = F(container, self)
@@ -263,6 +256,7 @@ class App(customtkinter.CTk):
     
     
 if __name__ == "__main__":
+    
     app = App()
     app.after(0, lambda:app.state('zoomed'))
     
