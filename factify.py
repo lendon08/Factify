@@ -3,8 +3,9 @@ import tkinter.messagebox
 import customtkinter
 from customtkinter import *
 from CTkTable import CTkTable
-from PIL import Image
+from PIL import Image, ImageTk
 import os
+from itertools import count
 
 customtkinter.set_appearance_mode("light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme(os.path.join("", "custom_theme.json"))  # Themes: "blue" (standard), "green", "dark-blue"
@@ -31,6 +32,8 @@ arrowleft_img_data = Image.open(os.path.join('images', "arrow-left.png"), 'r')
 profile1_img_data =Image.open(os.path.join('images', "profile1.png"), 'r')
 profile2_img_data =Image.open(os.path.join('images', "profile2.png"), 'r')
 profile3_img_data =Image.open(os.path.join('images', "profile3.png"), 'r')
+
+loading_img_data = Image.open(os.path.join('images', "loading_v1.gif"), 'r')
 
 #set it to CTKImages
 logo_img = CTkImage(dark_image=logo_img_data, light_image=logo_img_data, size=(60, 60))
@@ -109,6 +112,11 @@ class StartPage(customtkinter.CTkFrame):
 
         self.detect = customtkinter.CTkButton(self.main_content , text="Detect" , height=50, width=70, text_color="white", fg_color="#004CC6")
         self.detect.grid(row=3, column=3, padx=(1300, 0),pady=(450,0))
+
+        self.loading = LoadingLabel(self.main_content, text="")
+        self.loading.load(loading_img_data)
+        self.loading.grid(row=3, column=3)
+
         
 class LandingPage(customtkinter.CTkFrame):
     def __init__(self, parent, controller):
@@ -244,7 +252,7 @@ class App(customtkinter.CTk):
 
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(LandingPage)
+        self.show_frame(StartPage)
 
     def show_frame(self, cont):
 
@@ -253,7 +261,43 @@ class App(customtkinter.CTk):
 
     def set_font(self, size, weight):
         return customtkinter.CTkFont(family="Inter", size=size , weight=weight)
-    
+
+class LoadingLabel(customtkinter.CTkLabel):
+    """a label that displays images, and plays them if they are gifs"""
+    def load(self, im):
+        if isinstance(im, str):
+            im = Image.open(im)
+        self.loc = 0
+        self.frames = []
+
+        try:
+            for i in count(1):
+                self.frames.append(ImageTk.PhotoImage(im.copy()))
+                im.seek(i)
+        except EOFError:
+            pass
+
+        try:
+            self.delay = im.info['duration']
+        except:
+            self.delay = 100
+
+        if len(self.frames) == 1:
+            self.configure(image=self.frames[0])
+        else:
+            self.next_frame()
+
+    def unload(self):
+        self.config(image="")
+        self.frames = None
+
+    def next_frame(self):
+        self.update()
+        if self.frames:
+            self.loc += 1
+            self.loc %= len(self.frames)
+            self.configure(image=self.frames[self.loc])
+            self.after(self.delay, self.next_frame)    
     
 if __name__ == "__main__":
     

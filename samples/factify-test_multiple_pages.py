@@ -8,7 +8,7 @@ import os
 
 
 customtkinter.set_appearance_mode("light")  # Modes: "System" (standard), "Dark", "Light"
-customtkinter.set_default_color_theme(os.path.join("Factify", "custom_theme.json"))  # Themes: "blue" (standard), "green", "dark-blue"
+customtkinter.set_default_color_theme(os.path.join("", "custom_theme.json"))  # Themes: "blue" (standard), "green", "dark-blue"
 # customtkinter.set_default_color_theme("dark-blue") 
 
 
@@ -18,14 +18,14 @@ content2 = "Experience clarity and precision with our innovative solution. \nStr
 content3 = "Experience clarity and precision with our innovative solution. \nStreamlined and efficient, our product delivers a seamless experience."
 
 #get images
-chat_img_data = Image.open(os.path.join('Factify/images', "chat.png"), 'r')
-logo_img_data = Image.open(os.path.join('Factify/images', "logo.png"), 'r')
-about_img_data = Image.open(os.path.join('Factify/images', "about.png"), 'r')
-add_img_data = Image.open(os.path.join('Factify/images', "add.png"), 'r')
-delete_img_data = Image.open(os.path.join('Factify/images', "delete.png"), 'r')
-updates_img_data = Image.open(os.path.join('Factify/images', "updates.png"), 'r')
-target_img_data = Image.open(os.path.join('Factify/images', "target.png"), 'r')
-trendup_img_data = Image.open(os.path.join('Factify/images', "trend_up.png"), 'r')
+chat_img_data = Image.open(os.path.join('images', "chat.png"), 'r')
+logo_img_data = Image.open(os.path.join('images', "logo.png"), 'r')
+about_img_data = Image.open(os.path.join('images', "about.png"), 'r')
+add_img_data = Image.open(os.path.join('images', "add.png"), 'r')
+delete_img_data = Image.open(os.path.join('images', "delete.png"), 'r')
+updates_img_data = Image.open(os.path.join('images', "updates.png"), 'r')
+target_img_data = Image.open(os.path.join('images', "target.png"), 'r')
+trendup_img_data = Image.open(os.path.join('images', "trend_up.png"), 'r')
 
 #set it to CTKImages
 logo_img = CTkImage(dark_image=logo_img_data, light_image=logo_img_data, size=(60, 60))
@@ -300,6 +300,6 @@ if __name__ == "__main__":
     app.after(0, lambda:app.state('zoomed'))
     
     # TODO Resolve Logo of the app
-    # app.iconphoto(True, tkinter.PhotoImage(file=os.path.join('Factify/images', "logo.png")))
+    # app.iconphoto(True, tkinter.PhotoImage(file=os.path.join('images', "logo.png")))
     app.title("Factify")
     app.mainloop()
