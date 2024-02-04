@@ -6,6 +6,8 @@ from CTkTable import CTkTable
 from PIL import Image, ImageTk
 import os
 from itertools import count
+import time
+import threading
 
 customtkinter.set_appearance_mode("light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme(os.path.join("", "custom_theme.json"))  # Themes: "blue" (standard), "green", "dark-blue"
@@ -33,8 +35,8 @@ profile1_img_data =Image.open(os.path.join('images', "profile1.png"), 'r')
 profile2_img_data =Image.open(os.path.join('images', "profile2.png"), 'r')
 profile3_img_data =Image.open(os.path.join('images', "profile3.png"), 'r')
 
-loading_img_data = Image.open(os.path.join('images', "loading_v1.gif"), 'r')
-
+loading_img_data = Image.open(os.path.join('images', "loading1.gif"), 'r')
+loadingBlank_img_data = Image.open(os.path.join('images', "loading2.png"), 'r')
 #set it to CTKImages
 logo_img = CTkImage(dark_image=logo_img_data, light_image=logo_img_data, size=(60, 60))
 about_img = CTkImage(dark_image=about_img_data, light_image=about_img_data)
@@ -56,6 +58,43 @@ class PreviousChats(customtkinter.CTkScrollableFrame):
         for i in range(30):
             self.sidebar = customtkinter.CTkButton(self,  height=48, width=280, text="Values here", image=chat_img, compound=LEFT, anchor="w")
             self.sidebar.grid(row=i, column=0, padx=20, pady=(20, 10))
+
+class LoadingLabel(customtkinter.CTkLabel):
+    """a label that displays images, and plays them if they are gifs"""
+    def load(self, im):
+        if isinstance(im, str):
+            im = Image.open(im)
+        self.loc = 0
+        self.frames = []
+
+        try:
+            for i in count(1):
+                self.frames.append(ImageTk.PhotoImage(im.copy()))
+                im.seek(i)
+        except EOFError:
+            pass
+
+        try:
+            self.delay = im.info['duration']
+        except:
+            self.delay = 100
+
+        if len(self.frames) == 1:
+            self.configure(image=self.frames[0])
+        else:
+            self.next_frame()
+
+    def unload(self):
+        self.config(image="")
+        self.frames = None
+
+    def next_frame(self):
+        self.update()
+        if self.frames:
+            self.loc += 1
+            self.loc %= len(self.frames)
+            self.configure(image=self.frames[self.loc])
+            self.after(self.delay, self.next_frame)    
 
 class StartPage(customtkinter.CTkFrame):
     def __init__(self, parent, controller):
@@ -95,29 +134,45 @@ class StartPage(customtkinter.CTkFrame):
         # MAIN CONTENT
         self.main_content = customtkinter.CTkFrame(self, corner_radius=10)
         self.main_content.grid(row=0, column=1, padx=(10, 10), pady=(10, 10), rowspan=3 , sticky="nsew")
-        self.main_content.grid_rowconfigure(3, weight=1)
-        self.main_content.grid_columnconfigure(3, weight=1)
+        self.main_content.grid_rowconfigure(list(range(13)), weight=1)
+        self.main_content.grid_columnconfigure(list(range(13)), weight=1)
 
         self.main_header1 = customtkinter.CTkLabel(self.main_content, text="Fake News Detector", font=controller.set_font(40, "bold"), justify=LEFT)
-        self.main_header1.grid(row=3, column=3, padx=(0,970), pady =(0,800))
+        self.main_header1.grid(row=1, column=1, columnspan=10, sticky="w")
 
         self.sub_header = customtkinter.CTkLabel(self.main_content, text=content_start_page, font=controller.set_font(20, "normal"), justify=LEFT)
-        self.sub_header.grid(row=3, column=3, padx=(0,920), pady=(0,700))
+        self.sub_header.grid(row=2, column=1, columnspan=10, sticky="w")
 
         self.textbox = customtkinter.CTkTextbox(self.main_content,height=500, width=400, corner_radius=15, border_width=2)
-        self.textbox.grid(row=3, column=3, padx=(100,100), pady=(0, 110),sticky="ew", columnspan=3)
+        self.textbox.grid(row=3, column=1,sticky="ew", columnspan=11)
         
-        self.btn_clear = customtkinter.CTkButton(self.main_content, text="Clear", height=50, width=70, text_color="#2364cd", fg_color="#e4eaf3")
-        self.btn_clear.grid(row=3, column=3, padx=(1100, 0), pady=(450,0))
-
-        self.detect = customtkinter.CTkButton(self.main_content , text="Detect" , height=50, width=70, text_color="white", fg_color="#004CC6")
-        self.detect.grid(row=3, column=3, padx=(1300, 0),pady=(450,0))
+        self.btn_clear = customtkinter.CTkButton(self.main_content, text="Clear",command=lambda :self.del_input(self.textbox), height=50, width=70, text_color="#2364cd", fg_color="#e4eaf3")
+        self.btn_clear.grid(row=4, column=1,columnspan=10, sticky="e")
 
         self.loading = LoadingLabel(self.main_content, text="")
-        self.loading.load(loading_img_data)
-        self.loading.grid(row=3, column=3)
+        self.loading.load(loadingBlank_img_data)
+        self.loading.grid(row=6, column=3)
 
+        self.detect = customtkinter.CTkButton(self.main_content , text="Detect" , command=lambda :self.get_input(self.textbox), height=50, width=70, text_color="white", fg_color="#004CC6")
+        self.detect.grid(row=4, column=11)
+
+    def del_input(self, textbox):
+        textbox.delete("1.0",END)
+
+    def get_input(self, textbox):
+        input = textbox.get("1.0",END)
+        print(input)
+
+    def time_loading(self, loading):
         
+        time.sleep(5)
+        print("im here")
+        loading.load(loadingBlank_img_data)
+
+    def detect_btn(self, loading):
+        loading.load(loading_img_data)
+        # self.time_loading(self.loading)
+            
 class LandingPage(customtkinter.CTkFrame):
     def __init__(self, parent, controller):
         customtkinter.CTkFrame.__init__(self,parent)
@@ -262,42 +317,7 @@ class App(customtkinter.CTk):
     def set_font(self, size, weight):
         return customtkinter.CTkFont(family="Inter", size=size , weight=weight)
 
-class LoadingLabel(customtkinter.CTkLabel):
-    """a label that displays images, and plays them if they are gifs"""
-    def load(self, im):
-        if isinstance(im, str):
-            im = Image.open(im)
-        self.loc = 0
-        self.frames = []
 
-        try:
-            for i in count(1):
-                self.frames.append(ImageTk.PhotoImage(im.copy()))
-                im.seek(i)
-        except EOFError:
-            pass
-
-        try:
-            self.delay = im.info['duration']
-        except:
-            self.delay = 100
-
-        if len(self.frames) == 1:
-            self.configure(image=self.frames[0])
-        else:
-            self.next_frame()
-
-    def unload(self):
-        self.config(image="")
-        self.frames = None
-
-    def next_frame(self):
-        self.update()
-        if self.frames:
-            self.loc += 1
-            self.loc %= len(self.frames)
-            self.configure(image=self.frames[self.loc])
-            self.after(self.delay, self.next_frame)    
     
 if __name__ == "__main__":
     
