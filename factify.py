@@ -247,50 +247,46 @@ class AboutPage(customtkinter.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
       
-        # configure grid layout (12x12)
-        self.main_content = customtkinter.CTkFrame(self, corner_radius=15, width=self.winfo_screenwidth())
-        self.main_content.grid(row=0, column=0, padx=(10, 10), pady=(10, 10), rowspan=11 , sticky="nsew")
-        self.main_content.grid_columnconfigure(list(range(11)), weight=1)
-        self.main_content.grid_rowconfigure(list(range(11)), weight=1)
+        pad_x = screen_width/200
+        pad_y = screen_height/100
+        pad_x_content =screen_width/50
+        pad_y_content = screen_height/6
 
-        # Use for testing the rows and columns 
-        for x in range(11):
-            self.main_header = customtkinter.CTkLabel(self.main_content, text="Fake News", justify=LEFT, fg_color="#ff0000")
-            self.main_header.grid(row=6, column=x)
+        # configure grid layout (5x12)
+        self.main_content = customtkinter.CTkFrame(self, corner_radius=15, width=screen_width)
+        self.main_content.grid(row=0, column=0, padx=(pad_x, pad_x), pady=(pad_y, pad_y), sticky="nsew")
+        self.main_content.grid_columnconfigure(list(range(5)), weight=1)
+        self.main_content.grid_rowconfigure(list(range(12)), weight=1)
         
-        self.back_btn = customtkinter.CTkButton(self.main_content, text="Back to app", command=lambda: controller.show_frame(StartPage), text_color="#004CC6",font=controller.set_font(18, "normal"), image=arrowleft_img, compound=LEFT)
-        self.back_btn.grid(row=0, column=1)
+        self.back_btn = customtkinter.CTkButton(self.main_content, text="Back to app", command=lambda: controller.show_frame(StartPage), text_color="#004CC6",font=controller.set_font(18, "normal"), image=arrowleft_img, compound=LEFT, anchor="w")
+        self.back_btn.grid(row=0, column=1, pady=(10, 0) ,sticky=N+E+W)
 
         self.header = customtkinter.CTkLabel(self.main_content, text="About" , font=controller.set_font(40, "bold"),anchor="w")
-        self.header.grid(row=1, column=1)
+        self.header.grid(row=1, column=1, padx=(pad_x_content,0), sticky=N+E+W)
 
-        self.content1 =customtkinter.CTkLabel(self.main_content, text=content_aboutpage1 , font=controller.set_font(16, "normal"), justify="left", anchor="w" , wraplength=screen_width/2)
-        self.content1.grid(row=2, column=0, columnspan=8, padx=(70, 0))
+        self.content1 =customtkinter.CTkLabel(self.main_content, text=content_aboutpage1 , font=controller.set_font(16, "normal"), justify="left", anchor="w" , wraplength=screen_width/1.5)
+        self.content1.grid(row=2, column=1, columnspan=8, padx=(pad_x_content, 0), sticky=N+E+W)
 
-        self.content1 =customtkinter.CTkLabel(self.main_content, text=content_aboutpage2 , font=controller.set_font(16, "normal"), justify="left", anchor="w", wraplength=screen_width/2 )
-        self.content1.grid(row=3, column=0, columnspan=8, padx=(70, 0), pady=(0,screen_height/100))
-
-
-
+        self.content1 =customtkinter.CTkLabel(self.main_content, text=content_aboutpage2 , font=controller.set_font(16, "normal"), justify="left", anchor="w", wraplength=screen_width/1.5)
+        self.content1.grid(row=3, column=1, columnspan=8, padx=(pad_x_content, 0), pady=(0,screen_height/100), sticky=N+E+W)
 
         self.profile_header = customtkinter.CTkLabel(self.main_content, text="Meet the Factify team", font=controller.set_font(20, "normal"))
-        self.profile_header.grid(row=4, column=4,pady=(0,300))
+        self.profile_header.grid(row=4, column=2,pady=(0,0), sticky=N+E+W)
 
-        self.profilepic1 = customtkinter.CTkLabel(self.main_content, image=profile1_img, text="")
-        self.profilepic1.grid(row=4, column=3, pady=(50,0))
+        self.profilepic1 = customtkinter.CTkLabel(self.main_content, height=profile_pic_size , image=profile1_img, text="")
+        self.profilepic1.grid(row=5, column=1, sticky="nsew")
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, text="Developer\nAbner Dominic B. Belotindos", font=controller.set_font(16, "bold"))
-        self.profilepic1.grid(row=5, column=3, pady=(0,100))
+        self.profilepic1.grid(row=5, column=1, pady=(pad_y_content,0), sticky=S+E+W)
 
-        self.profilepic1 = customtkinter.CTkLabel(self.main_content, image=profile2_img, text="")
-        self.profilepic1.grid(row=4, column=4, pady=(50,0))
+        self.profilepic1 = customtkinter.CTkLabel(self.main_content,  height=profile_pic_size , image=profile2_img, text="")
+        self.profilepic1.grid(row=5, column=2, sticky="nsew")
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, text="Developer\nJohn Andrei A. Manalo", font=controller.set_font(16, "bold"))
-        self.profilepic1.grid(row=5, column=4, pady=(0,100))
+        self.profilepic1.grid(row=5, column=2, pady=(pad_y_content,0), sticky=S+E+W)
 
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, image=profile3_img, text="")
-        self.profilepic1.grid(row=4, column=5, pady=(50,0))
+        self.profilepic1.grid(row=5, column=3, sticky="nsew")
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, text="Developer\nLendon N. Ato", font=controller.set_font(16, "bold"))
-        self.profilepic1.grid(row=5, column=5, pady=(0,100))
-
+        self.profilepic1.grid(row=5, column=3, pady=(pad_y_content,0) ,sticky=S+E+W)
 
 # Main class. Used for managing all Frames/Pages
 class App(customtkinter.CTk):
