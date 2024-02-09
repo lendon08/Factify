@@ -259,7 +259,7 @@ class AboutPage(customtkinter.CTkFrame):
         self.main_content.grid_rowconfigure(list(range(12)), weight=1)
         
         self.back_btn = customtkinter.CTkButton(self.main_content, text="Back to app", command=lambda: controller.show_frame(StartPage), text_color="#004CC6",font=controller.set_font(18, "normal"), image=arrowleft_img, compound=LEFT, anchor="w")
-        self.back_btn.grid(row=0, column=1, pady=(10, 0) ,sticky=N+E+W)
+        self.back_btn.grid(row=0, column=1, pady=(pad_x_content, 0) ,sticky=N+E+W)
 
         self.header = customtkinter.CTkLabel(self.main_content, text="About" , font=controller.set_font(40, "bold"),anchor="w")
         self.header.grid(row=1, column=1, padx=(pad_x_content,0), sticky=N+E+W)
@@ -308,8 +308,8 @@ class App(customtkinter.CTk):
             self.frames[F] = frame
 
             frame.grid(row=0, column=0, sticky="nsew")
-
-        self.show_frame(AboutPage)
+        
+        self.show_frame(AboutPage)#Pick between LandingPage,StartPage, AboutPage
     
     #  Call this method if you want to change frames/pages
     def show_frame(self, cont):
