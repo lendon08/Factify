@@ -1,5 +1,3 @@
-import tkinter
-import tkinter.messagebox
 import customtkinter
 from customtkinter import *
 from CTkTable import CTkTable
@@ -8,6 +6,11 @@ import os
 from itertools import count
 import time
 import threading
+import ctypes
+user32 = ctypes.windll.user32
+screen_width = user32.GetSystemMetrics(0) 
+screen_height = user32.GetSystemMetrics(1)
+profile_pic_size = int(screen_width/12)
 
 customtkinter.set_appearance_mode("light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme(os.path.join("", "custom_theme.json"))  # Themes: "blue" (standard), "green", "dark-blue"
@@ -18,8 +21,8 @@ content_landingpage1 = "Experience clarity and precision with our innovative sol
 content_landingpage2 = "Experience clarity and precision with our innovative solution. \nStreamlined and efficient, our product delivers a seamless experience."
 content_landingpage3 = "Experience clarity and precision with our innovative solution. \nStreamlined and efficient, our product delivers a seamless experience."
 content_start_page = "Your text.\nDecode your text. We analyze first 500 tokens."
-content_aboutpage1 = "Factify, your trusted ally in navigating the complex world of news and information. We understand the importance of reliable, unbiased news in today's \ninterconnected society, and we are committed to empowering you to make informed decisions."
-content_aboutpage2 = "At Factify, our mission is simple: to foster a more informed and discerning public by helping you distinguish between credible news and misinformation. \nWe believe that access to accurate information is a cornerstone of a healthy and thriving society."
+content_aboutpage1 = "Factify, your trusted ally in navigating the complex world of news and information. We understand the importance of reliable, unbiased news in today's interconnected society, and we are committed to empowering you to make informed decisions."
+content_aboutpage2 = "At Factify, our mission is simple: to foster a more informed and discerning public by helping you distinguish between credible news and misinformation. We believe that access to accurate information is a cornerstone of a healthy and thriving society."
 
 #get images
 chat_img_data = Image.open(os.path.join('images', "chat.png"), 'r')
@@ -37,6 +40,7 @@ profile3_img_data =Image.open(os.path.join('images', "profile3.png"), 'r')
 
 loading_img_data = Image.open(os.path.join('images', "loading1.gif"), 'r')
 loadingBlank_img_data = Image.open(os.path.join('images', "loading2.png"), 'r')
+
 #set it to CTKImages
 logo_img = CTkImage(dark_image=logo_img_data, light_image=logo_img_data, size=(60, 60))
 about_img = CTkImage(dark_image=about_img_data, light_image=about_img_data)
@@ -47,9 +51,9 @@ chat_img = CTkImage(dark_image=chat_img_data, light_image=chat_img_data)
 target_img = CTkImage(dark_image=target_img_data, light_image=target_img_data)
 trendup_img = CTkImage(dark_image=trendup_img_data, light_image=trendup_img_data)
 arrowleft_img = CTkImage(dark_image=arrowleft_img_data, light_image=arrowleft_img_data)
-profile1_img = CTkImage(dark_image=profile1_img_data, light_image=profile1_img_data, size=(200,200))
-profile2_img = CTkImage(dark_image=profile2_img_data, light_image=profile2_img_data, size=(200,200))
-profile3_img = CTkImage(dark_image=profile3_img_data, light_image=profile3_img_data, size=(200,200))
+profile1_img = CTkImage(dark_image=profile1_img_data, light_image=profile1_img_data, size=(profile_pic_size,profile_pic_size))
+profile2_img = CTkImage(dark_image=profile2_img_data, light_image=profile2_img_data, size=(profile_pic_size,profile_pic_size))
+profile3_img = CTkImage(dark_image=profile3_img_data, light_image=profile3_img_data, size=(profile_pic_size,profile_pic_size))
 
 class PreviousChats(customtkinter.CTkScrollableFrame):
     def __init__(self, master, **kwargs):
@@ -143,7 +147,7 @@ class StartPage(customtkinter.CTkFrame):
         self.sub_header = customtkinter.CTkLabel(self.main_content, text=content_start_page, font=controller.set_font(20, "normal"), justify=LEFT)
         self.sub_header.grid(row=2, column=1, columnspan=10, sticky="w")
 
-        self.textbox = customtkinter.CTkTextbox(self.main_content,height=500, width=400, corner_radius=15, border_width=2)
+        self.textbox = customtkinter.CTkTextbox(self.main_content,height=500, width=400, corner_radius=15, border_width=2, state=NORMAL)
         self.textbox.grid(row=3, column=1,sticky="ew", columnspan=11)
         
         self.btn_clear = customtkinter.CTkButton(self.main_content, text="Clear",command=lambda :self.del_input(self.textbox), height=50, width=70, text_color="#2364cd", fg_color="#e4eaf3")
@@ -160,11 +164,11 @@ class StartPage(customtkinter.CTkFrame):
         textbox.delete("1.0",END)
 
     def get_input(self, textbox):
-        input = textbox.get("1.0",END)
+        input = textbox.get(1.0,END)
+        input = input.rstrip("\n")
         print(input)
 
     def time_loading(self, loading):
-        
         time.sleep(5)
         print("im here")
         loading.load(loadingBlank_img_data)
@@ -246,12 +250,13 @@ class AboutPage(customtkinter.CTkFrame):
         # configure grid layout (12x12)
         self.main_content = customtkinter.CTkFrame(self, corner_radius=15, width=self.winfo_screenwidth())
         self.main_content.grid(row=0, column=0, padx=(10, 10), pady=(10, 10), rowspan=11 , sticky="nsew")
-        self.main_content.grid_columnconfigure(list(range(13)), weight=1)
-        self.main_content.grid_rowconfigure(list(range(13)), weight=1)
+        self.main_content.grid_columnconfigure(list(range(11)), weight=1)
+        self.main_content.grid_rowconfigure(list(range(11)), weight=1)
 
-        # for x in range(12):
-        #     self.main_header = customtkinter.CTkLabel(self.main_content, text="Fake News", justify=LEFT, fg_color="#ff0000")
-        #     self.main_header.grid(row=4, column=x)
+        # Use for testing the rows and columns 
+        for x in range(11):
+            self.main_header = customtkinter.CTkLabel(self.main_content, text="Fake News", justify=LEFT, fg_color="#ff0000")
+            self.main_header.grid(row=6, column=x)
         
         self.back_btn = customtkinter.CTkButton(self.main_content, text="Back to app", command=lambda: controller.show_frame(StartPage), text_color="#004CC6",font=controller.set_font(18, "normal"), image=arrowleft_img, compound=LEFT)
         self.back_btn.grid(row=0, column=1)
@@ -259,34 +264,35 @@ class AboutPage(customtkinter.CTkFrame):
         self.header = customtkinter.CTkLabel(self.main_content, text="About" , font=controller.set_font(40, "bold"),anchor="w")
         self.header.grid(row=1, column=1)
 
-        self.content1 =customtkinter.CTkLabel(self.main_content, text=content_aboutpage1 , font=controller.set_font(16, "normal"), justify="left", anchor="w" )
-        self.content1.grid(row=2, column=0, columnspan=9, padx=(70, 0))
+        self.content1 =customtkinter.CTkLabel(self.main_content, text=content_aboutpage1 , font=controller.set_font(16, "normal"), justify="left", anchor="w" , wraplength=screen_width/2)
+        self.content1.grid(row=2, column=0, columnspan=8, padx=(70, 0))
 
-        self.content1 =customtkinter.CTkLabel(self.main_content, text=content_aboutpage2 , font=controller.set_font(16, "normal"), justify="left", anchor="w" )
-        self.content1.grid(row=3, column=0, columnspan=9, padx=(70, 0), pady=(0,100))
+        self.content1 =customtkinter.CTkLabel(self.main_content, text=content_aboutpage2 , font=controller.set_font(16, "normal"), justify="left", anchor="w", wraplength=screen_width/2 )
+        self.content1.grid(row=3, column=0, columnspan=8, padx=(70, 0), pady=(0,screen_height/100))
 
-        self.content1 =customtkinter.CTkLabel(self.main_content, text=content_aboutpage2 , font=controller.set_font(16, "normal"), justify="left", anchor="w" )
-        self.content1.grid(row=3, column=0, columnspan=9, padx=(70, 0), pady=(0,100))
+
 
 
         self.profile_header = customtkinter.CTkLabel(self.main_content, text="Meet the Factify team", font=controller.set_font(20, "normal"))
         self.profile_header.grid(row=4, column=4,pady=(0,300))
 
-        self.profilepic1 = customtkinter.CTkLabel(self.main_content, width=100, height=200, image=profile1_img, text="")
+        self.profilepic1 = customtkinter.CTkLabel(self.main_content, image=profile1_img, text="")
         self.profilepic1.grid(row=4, column=3, pady=(50,0))
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, text="Developer\nAbner Dominic B. Belotindos", font=controller.set_font(16, "bold"))
         self.profilepic1.grid(row=5, column=3, pady=(0,100))
 
-        self.profilepic1 = customtkinter.CTkLabel(self.main_content, width=200, height=200, image=profile2_img, text="")
+        self.profilepic1 = customtkinter.CTkLabel(self.main_content, image=profile2_img, text="")
         self.profilepic1.grid(row=4, column=4, pady=(50,0))
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, text="Developer\nJohn Andrei A. Manalo", font=controller.set_font(16, "bold"))
         self.profilepic1.grid(row=5, column=4, pady=(0,100))
 
-        self.profilepic1 = customtkinter.CTkLabel(self.main_content, width=200, height=200, image=profile3_img, text="")
+        self.profilepic1 = customtkinter.CTkLabel(self.main_content, image=profile3_img, text="")
         self.profilepic1.grid(row=4, column=5, pady=(50,0))
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, text="Developer\nLendon N. Ato", font=controller.set_font(16, "bold"))
         self.profilepic1.grid(row=5, column=5, pady=(0,100))
 
+
+# Main class. Used for managing all Frames/Pages
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
@@ -298,7 +304,7 @@ class App(customtkinter.CTk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        #List all Frame class to interchange the display/design
+        #List all Frames/pages class to interchange the display/design
         for F in (LandingPage,StartPage, AboutPage):
 
             frame = F(container, self)
@@ -307,8 +313,9 @@ class App(customtkinter.CTk):
 
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(StartPage)
-
+        self.show_frame(AboutPage)
+    
+    #  Call this method if you want to change frames/pages
     def show_frame(self, cont):
 
         frame = self.frames[cont]
@@ -318,12 +325,10 @@ class App(customtkinter.CTk):
         return customtkinter.CTkFont(family="Inter", size=size , weight=weight)
 
 
-    
 if __name__ == "__main__":
-    
     app = App()
     app.after(0, lambda:app.state('zoomed'))
-    
+   
     # TODO Resolve Logo of the app
     # app.iconphoto(True, tkinter.PhotoImage(file=os.path.join('images', "logo.png")))
     app.title("Factify")
