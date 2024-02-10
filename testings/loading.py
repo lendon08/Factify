@@ -48,7 +48,7 @@ root = tk.Tk()
 lbl = LoadingLabel(root, text="")
 
 lbl.pack()
-loading_img_data = Image.open(os.path.join('images', "loading.gif"), 'r')
+loading_img_data = Image.open(os.path.join('images', "loading1.gif"), 'r')
 loading_img = CTkImage(dark_image=loading_img_data, light_image=loading_img_data)
 
 lbl.load(loading_img_data)

@@ -26,7 +26,7 @@ class MyApp(tk.Frame):
 
         self.button = tk.Button(
             self.main_frame,
-            text="Button"
+            text="Button",
             width=10,
             height=2
         )

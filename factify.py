@@ -129,6 +129,7 @@ class StartPage(customtkinter.CTkFrame):
         self.new_chat = customtkinter.CTkButton(self.sidebar_frame, height=sidebar_widget_height , width=sidebar_widget_width,text="Start a new chat",text_color="white", fg_color="#004CC6", image=add_img, compound=LEFT)
         self.new_chat.grid(row=4, column=0, pady=10)
 
+        #Delete All Data in database
         self.delete_conversation = customtkinter.CTkButton(self.sidebar_frame, height=sidebar_widget_height, width=sidebar_widget_width, text="Clear all conversation", image=delete_img, compound=LEFT , anchor="w")
         self.delete_conversation.grid(row=6, column=0, pady=(10, 0), sticky=N+S+E+W)
 
@@ -150,35 +151,35 @@ class StartPage(customtkinter.CTkFrame):
         self.sub_header = customtkinter.CTkLabel(self.main_content, text=content_start_page, font=controller.set_font(20, "normal"), justify=LEFT)
         self.sub_header.grid(row=2, column=1, columnspan=10, sticky=W)
 
-        self.textbox = customtkinter.CTkTextbox(self.main_content,height=500, width=400, corner_radius=15, border_width=2, state=NORMAL)
+        self.textbox = customtkinter.CTkTextbox(self.main_content,height=screen_height/2, width=screen_width/5, corner_radius=15, border_width=2, state=NORMAL)
         self.textbox.grid(row=3, column=1, columnspan=11, sticky=E+W)
         
         self.btn_clear = customtkinter.CTkButton(self.main_content, text="Clear",command=lambda :self.del_input(self.textbox), height=50, width=70, text_color="#2364cd", fg_color="#e4eaf3")
         self.btn_clear.grid(row=4, column=1,columnspan=10, sticky=E)
 
-        self.loading = LoadingLabel(self.main_content, text="")
+        self.loading = LoadingLabel(self.main_content, text="",font=controller.set_font(40, "bold"), compound=LEFT)
         self.loading.load(loadingBlank_img_data)
-        self.loading.grid(row=6, column=3)
+        self.loading.grid(row=6, column=6)
+        
+        
 
-        self.detect = customtkinter.CTkButton(self.main_content , text="Detect" , command=lambda :self.get_input(self.textbox), height=50, width=70, text_color="white", fg_color="#004CC6")
+        self.detect = customtkinter.CTkButton(self.main_content , text="Detect" , command=lambda :self.get_input(self.textbox, self.loading), height=50, width=70, text_color="white", fg_color="#004CC6")
         self.detect.grid(row=4, column=11, sticky=E)
 
     def del_input(self, textbox):
         textbox.delete("1.0",END)
 
-    def get_input(self, textbox):
+    def get_input(self, textbox, loading):
         input = textbox.get(1.0,END)
         input = input.rstrip("\n")
-        print(input)
-
-    def time_loading(self, loading):
+        loading.configure(text="Analyzing Text..." )
+        loading.load(loading_img_data)
         time.sleep(5)
         print("im here")
         loading.load(loadingBlank_img_data)
 
-    def detect_btn(self, loading):
-        loading.load(loading_img_data)
-        # self.time_loading(self.loading)
+    # def time_loading(self, loading):
+    
             
 class LandingPage(customtkinter.CTkFrame):
     def __init__(self, parent, controller):
