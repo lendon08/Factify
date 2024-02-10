@@ -11,6 +11,8 @@ user32 = ctypes.windll.user32
 screen_width = user32.GetSystemMetrics(0) 
 screen_height = user32.GetSystemMetrics(1)
 profile_pic_size = int(screen_width/12)
+sidebar_widget_width = screen_width*0.12
+sidebar_widget_height = screen_height*0.04 
 
 customtkinter.set_appearance_mode("light")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme(os.path.join("", "custom_theme.json"))  # Themes: "blue" (standard), "green", "dark-blue"
@@ -59,8 +61,9 @@ class PreviousChats(customtkinter.CTkScrollableFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
         self.radiobuttons = []
+       
         for i in range(30):
-            self.sidebar = customtkinter.CTkButton(self,  height=48, width=280, text="Values here", image=chat_img, compound=LEFT, anchor="w")
+            self.sidebar = customtkinter.CTkButton(self,  height=sidebar_widget_height, width=sidebar_widget_width, text="Values here", image=chat_img, compound=LEFT, anchor="w")
             self.sidebar.grid(row=i, column=0, padx=20, pady=(20, 10))
 
 class LoadingLabel(customtkinter.CTkLabel):
@@ -103,62 +106,62 @@ class LoadingLabel(customtkinter.CTkLabel):
 class StartPage(customtkinter.CTkFrame):
     def __init__(self, parent, controller):
         customtkinter.CTkFrame.__init__(self,parent)
-  
+        
         
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
-        self.grid_columnconfigure((2, 3), weight=0)
+        self.grid_columnconfigure((2,3,4,5,6,7), weight=0)
         self.grid_rowconfigure((0, 1, 2), weight=1)
         
         # SIDEBAR
         self.sidebar_frame = customtkinter.CTkFrame(self, width=200, corner_radius=0)
-        self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
+        self.sidebar_frame.grid(row=0, column=0, rowspan=3, columnspan=1 , sticky=N+S+E+W)
         self.sidebar_frame.grid_rowconfigure(5, weight=1)
 
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, height=48, width=280, text="Factify", image=logo_img, font=customtkinter.CTkFont(family="Inter", size=24, weight="bold"), compound=LEFT)
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, width=sidebar_widget_width, text="Factify", image=logo_img, font=customtkinter.CTkFont(family="Inter", size=24, weight="bold"), compound=LEFT)
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
         # TODO must get to a data to database
-        self.my_frame = PreviousChats(master=self.sidebar_frame, width=300, fg_color="#F8F8F8")
-        self.my_frame.grid(row=1, column=0, sticky="nsew")
+        self.my_frame = PreviousChats(master=self.sidebar_frame,  fg_color="#F8F8F8")
+        self.my_frame.grid(row=1, column=0, sticky=N+S+E+W)
       
 
-        self.new_chat = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280 , text="Start a new chat",text_color="white", fg_color="#004CC6", image=add_img, compound=LEFT)
+        self.new_chat = customtkinter.CTkButton(self.sidebar_frame, height=sidebar_widget_height , width=sidebar_widget_width,text="Start a new chat",text_color="white", fg_color="#004CC6", image=add_img, compound=LEFT)
         self.new_chat.grid(row=4, column=0, pady=10)
 
-        self.delete_conversation = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280, text="Clear all conversation", image=delete_img, compound=LEFT , anchor="w")
-        self.delete_conversation.grid(row=6, column=0, pady=(10, 0))
+        self.delete_conversation = customtkinter.CTkButton(self.sidebar_frame, height=sidebar_widget_height, width=sidebar_widget_width, text="Clear all conversation", image=delete_img, compound=LEFT , anchor="w")
+        self.delete_conversation.grid(row=6, column=0, pady=(10, 0), sticky=N+S+E+W)
 
-        self.updates_and_faq = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280, text="Updates and FAQ", image=updates_img, compound=LEFT , anchor="w")
-        self.updates_and_faq.grid(row=7, column=0, pady=(10, 0))
+        self.updates_and_faq = customtkinter.CTkButton(self.sidebar_frame, height=sidebar_widget_height, width=sidebar_widget_width, text="Updates and FAQ", image=updates_img, compound=LEFT , anchor="w")
+        self.updates_and_faq.grid(row=7, column=0, pady=(10, 0), sticky=N+S+E+W)
 
-        self.about_btn = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280, text="About", image=about_img, compound=LEFT , anchor="w", command=lambda: controller.show_frame(AboutPage))
-        self.about_btn.grid(row=8, column=0, pady=(10, 20))
+        self.about_btn = customtkinter.CTkButton(self.sidebar_frame, height=sidebar_widget_height, width=sidebar_widget_width, text="About", image=about_img, compound=LEFT , anchor="w", command=lambda: controller.show_frame(AboutPage))
+        self.about_btn.grid(row=8, column=0, pady=(10, 10), sticky=N+S+E+W)
 
         # MAIN CONTENT
         self.main_content = customtkinter.CTkFrame(self, corner_radius=10)
-        self.main_content.grid(row=0, column=1, padx=(10, 10), pady=(10, 10), rowspan=3 , sticky="nsew")
+        self.main_content.grid(row=0, column=1, padx=(10, 10), pady=(10, 10), rowspan=7 , sticky=N+S+E+W)
         self.main_content.grid_rowconfigure(list(range(13)), weight=1)
         self.main_content.grid_columnconfigure(list(range(13)), weight=1)
 
         self.main_header1 = customtkinter.CTkLabel(self.main_content, text="Fake News Detector", font=controller.set_font(40, "bold"), justify=LEFT)
-        self.main_header1.grid(row=1, column=1, columnspan=10, sticky="w")
+        self.main_header1.grid(row=1, column=1, columnspan=10, sticky=W)
 
         self.sub_header = customtkinter.CTkLabel(self.main_content, text=content_start_page, font=controller.set_font(20, "normal"), justify=LEFT)
-        self.sub_header.grid(row=2, column=1, columnspan=10, sticky="w")
+        self.sub_header.grid(row=2, column=1, columnspan=10, sticky=W)
 
         self.textbox = customtkinter.CTkTextbox(self.main_content,height=500, width=400, corner_radius=15, border_width=2, state=NORMAL)
-        self.textbox.grid(row=3, column=1,sticky="ew", columnspan=11)
+        self.textbox.grid(row=3, column=1, columnspan=11, sticky=E+W)
         
         self.btn_clear = customtkinter.CTkButton(self.main_content, text="Clear",command=lambda :self.del_input(self.textbox), height=50, width=70, text_color="#2364cd", fg_color="#e4eaf3")
-        self.btn_clear.grid(row=4, column=1,columnspan=10, sticky="e")
+        self.btn_clear.grid(row=4, column=1,columnspan=10, sticky=E)
 
         self.loading = LoadingLabel(self.main_content, text="")
         self.loading.load(loadingBlank_img_data)
         self.loading.grid(row=6, column=3)
 
         self.detect = customtkinter.CTkButton(self.main_content , text="Detect" , command=lambda :self.get_input(self.textbox), height=50, width=70, text_color="white", fg_color="#004CC6")
-        self.detect.grid(row=4, column=11)
+        self.detect.grid(row=4, column=11, sticky=E)
 
     def del_input(self, textbox):
         textbox.delete("1.0",END)
@@ -188,31 +191,31 @@ class LandingPage(customtkinter.CTkFrame):
         
         # SIDEBAR
         self.sidebar_frame = customtkinter.CTkFrame(self, width=200, corner_radius=0)
-        self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
+        self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky=N+S+E+W)
         self.sidebar_frame.grid_rowconfigure(5, weight=1)
 
-        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, height=48, width=280, text="Factify", image=logo_img, font=customtkinter.CTkFont(family="Inter", size=24, weight="bold"), compound=LEFT)
+        self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, height=sidebar_widget_height, width=280, text="Factify", image=logo_img, font=customtkinter.CTkFont(family="Inter", size=24, weight="bold"), compound=LEFT)
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
         # TODO must get to a data to database
         self.my_frame = PreviousChats(master=self.sidebar_frame, width=300, fg_color="#F8F8F8")
-        self.my_frame.grid(row=1, column=0, sticky="nsew")
+        self.my_frame.grid(row=1, column=0, sticky=N+S+E+W)
 
-        self.new_chat = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280 , text="Start a new chat",text_color="white", fg_color="#004CC6", image=add_img, compound=LEFT)
+        self.new_chat = customtkinter.CTkButton(self.sidebar_frame, height=sidebar_widget_height, width=280 , text="Start a new chat",text_color="white", fg_color="#004CC6", image=add_img, compound=LEFT)
         self.new_chat.grid(row=4, column=0, pady=10)
 
-        self.delete_conversation = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280, text="Clear all conversation", image=delete_img, compound=LEFT , anchor="w")
+        self.delete_conversation = customtkinter.CTkButton(self.sidebar_frame, height=sidebar_widget_height, width=280, text="Clear all conversation", image=delete_img, compound=LEFT , anchor="w")
         self.delete_conversation.grid(row=6, column=0, pady=(10, 0))
 
-        self.updates_and_faq = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280, text="Updates and FAQ", image=updates_img, compound=LEFT , anchor="w")
+        self.updates_and_faq = customtkinter.CTkButton(self.sidebar_frame, height=sidebar_widget_height, width=280, text="Updates and FAQ", image=updates_img, compound=LEFT , anchor="w")
         self.updates_and_faq.grid(row=7, column=0, pady=(10, 0))
 
-        self.about_btn = customtkinter.CTkButton(self.sidebar_frame, height=48, width=280, text="About", image=about_img, compound=LEFT , anchor="w", command=lambda: controller.show_frame(AboutPage))
+        self.about_btn = customtkinter.CTkButton(self.sidebar_frame, height=sidebar_widget_height, width=280, text="About", image=about_img, compound=LEFT , anchor="w", command=lambda: controller.show_frame(AboutPage))
         self.about_btn.grid(row=8, column=0, pady=(10, 20))
 
         # MAIN CONTENT
         self.main_content = customtkinter.CTkFrame(self, corner_radius=10)
-        self.main_content.grid(row=0, column=1, padx=(10, 10), pady=(10, 10), rowspan=4 , sticky="nsew")
+        self.main_content.grid(row=0, column=1, padx=(10, 10), pady=(10, 10), rowspan=4 , sticky=N+S+E+W)
         self.main_content.grid_rowconfigure(4, weight=1)
         self.main_content.grid_columnconfigure(4, weight=1)
        
@@ -222,7 +225,7 @@ class LandingPage(customtkinter.CTkFrame):
         self.sub_header = customtkinter.CTkLabel(self.main_content,text="The power of AI at your service - Tame the knowledge.", font=controller.set_font(16, "bold"))
         self.sub_header.grid(row=4, column=4, pady=(0,510))
 
-        self.cta = customtkinter.CTkButton(self.main_content,  height=48, width=70, text="Start", command=lambda: controller.show_frame(StartPage) , fg_color="#004CC6", text_color="white")
+        self.cta = customtkinter.CTkButton(self.main_content,  height=sidebar_widget_height, width=70, text="Start", command=lambda: controller.show_frame(StartPage) , fg_color="#004CC6", text_color="white")
         self.cta.grid(row=4, column=4, pady=(0,300))
 
         self.card_title1 = customtkinter.CTkLabel(self.main_content,text="Clear and precise", font=controller.set_font(16, "bold"), image=about_img, compound=TOP)
@@ -254,7 +257,7 @@ class AboutPage(customtkinter.CTkFrame):
 
         # configure grid layout (5x12)
         self.main_content = customtkinter.CTkFrame(self, corner_radius=15, width=screen_width)
-        self.main_content.grid(row=0, column=0, padx=(pad_x, pad_x), pady=(pad_y, pad_y), sticky="nsew")
+        self.main_content.grid(row=0, column=0, padx=(pad_x, pad_x), pady=(pad_y, pad_y), sticky=N+S+E+W)
         self.main_content.grid_columnconfigure(list(range(5)), weight=1)
         self.main_content.grid_rowconfigure(list(range(12)), weight=1)
         
@@ -274,17 +277,17 @@ class AboutPage(customtkinter.CTkFrame):
         self.profile_header.grid(row=4, column=2,pady=(0,0), sticky=N+E+W)
 
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, height=profile_pic_size , image=profile1_img, text="")
-        self.profilepic1.grid(row=5, column=1, sticky="nsew")
+        self.profilepic1.grid(row=5, column=1, sticky=N+S+E+W)
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, text="Developer\nAbner Dominic B. Belotindos", font=controller.set_font(16, "bold"))
         self.profilepic1.grid(row=5, column=1, pady=(pad_y_content,0), sticky=S+E+W)
 
         self.profilepic1 = customtkinter.CTkLabel(self.main_content,  height=profile_pic_size , image=profile2_img, text="")
-        self.profilepic1.grid(row=5, column=2, sticky="nsew")
+        self.profilepic1.grid(row=5, column=2, sticky=N+S+E+W)
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, text="Developer\nJohn Andrei A. Manalo", font=controller.set_font(16, "bold"))
         self.profilepic1.grid(row=5, column=2, pady=(pad_y_content,0), sticky=S+E+W)
 
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, image=profile3_img, text="")
-        self.profilepic1.grid(row=5, column=3, sticky="nsew")
+        self.profilepic1.grid(row=5, column=3, sticky=N+S+E+W)
         self.profilepic1 = customtkinter.CTkLabel(self.main_content, text="Developer\nLendon N. Ato", font=controller.set_font(16, "bold"))
         self.profilepic1.grid(row=5, column=3, pady=(pad_y_content,0) ,sticky=S+E+W)
 
@@ -307,9 +310,9 @@ class App(customtkinter.CTk):
 
             self.frames[F] = frame
 
-            frame.grid(row=0, column=0, sticky="nsew")
+            frame.grid(row=0, column=0, sticky=N+S+E+W)
         
-        self.show_frame(AboutPage)#Pick between LandingPage,StartPage, AboutPage
+        self.show_frame(StartPage)#Pick between LandingPage,StartPage, AboutPage
     
     #  Call this method if you want to change frames/pages
     def show_frame(self, cont):
