@@ -10,3 +10,7 @@ pip install customtkinter
 ```
 pip install pillow
 ```
+## Run the code
+```
+py factify.py
+```
