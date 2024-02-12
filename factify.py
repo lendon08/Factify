@@ -157,26 +157,40 @@ class StartPage(customtkinter.CTkFrame):
         self.btn_clear = customtkinter.CTkButton(self.main_content, text="Clear",command=lambda :self.del_input(self.textbox), height=50, width=70, text_color="#2364cd", fg_color="#e4eaf3")
         self.btn_clear.grid(row=4, column=1,columnspan=10, sticky=E)
 
-        self.loading = LoadingLabel(self.main_content, text="",font=controller.set_font(40, "bold"), compound=LEFT)
-        self.loading.load(loadingBlank_img_data)
-        self.loading.grid(row=6, column=6)
+        # self.loading = LoadingLabel(self.main_content, text="",font=controller.set_font(40, "bold"), compound=LEFT)
+        # self.loading.load(loadingBlank_img_data)
+        # self.loading.grid(row=6, column=6)
         
-        
+        self.progressbar = customtkinter.CTkProgressBar(self.main_content, orientation="horizontal", height=50, width=500, progress_color="green", fg_color="red", corner_radius=20)
+        self.progressbar.grid(row=6, column=6)
+        self.progressbar.set(0.21)
 
-        self.detect = customtkinter.CTkButton(self.main_content , text="Detect" , command=lambda :self.get_input(self.textbox, self.loading), height=50, width=70, text_color="white", fg_color="#004CC6")
+        self.progressbar2 = customtkinter.CTkProgressBar(self.main_content, orientation="horizontal", height=50, width=500, progress_color="red", fg_color="green")
+        self.progressbar2.grid(row=7, column=6)
+        self.progressbar2.set(0.25)
+        # self.progressbar.start()
+
+        self.detect = customtkinter.CTkButton(self.main_content , text="Detect" , 
+                                            #   command=lambda :self.get_input(self.textbox, self.loading),
+                                            #    command=lambda :self.run(),
+                                                height=50, width=70, text_color="white", fg_color="#004CC6")
         self.detect.grid(row=4, column=11, sticky=E)
+
+    # def run(self):
+        
+        
 
     def del_input(self, textbox):
         textbox.delete("1.0",END)
 
-    def get_input(self, textbox, loading):
-        input = textbox.get(1.0,END)
-        input = input.rstrip("\n")
-        loading.configure(text="Analyzing Text..." )
-        loading.load(loading_img_data)
-        time.sleep(5)
-        print("im here")
-        loading.load(loadingBlank_img_data)
+    # def get_input(self, textbox, loading):
+        # input = textbox.get(1.0,END)
+        # input = input.rstrip("\n")
+        # loading.configure(text="Analyzing Text..." )
+        # loading.load(loading_img_data)
+        # time.sleep(5)
+        # print("im here")
+        # loading.load(loadingBlank_img_data)
 
     # def time_loading(self, loading):
     
